@@ -1,0 +1,36 @@
+@use "sass:math";
+
+@function rem($pixels, $context: 16) {
+  @return (math.div($pixels, $context)) * 1rem;
+}
+
+@function em($pixels, $context: 16) {
+  @return (math.div($pixels, $context)) * 1em;
+}
+
+// 360px (mobile), 768px (tablet), 1366px (small desktop), 1920px (large desktop)
+$breakpoints: (
+  "small": "22.5em",
+  "medium": "48em",
+  "large": "85.375em",
+  "xlarge": "120em",
+);
+
+// // 639px, 1149px, 1399px
+// $breakpoints-down: (
+// 	'small': '39.9375em',
+// 	'medium': '71.8125em',
+// 	'large': '87.4375em',
+// );
+
+@mixin breakpoint($size) {
+  @media (min-width: map-get($breakpoints, $size)) {
+    @content;
+  }
+}
+
+// @mixin breakpoint-down($size) {
+// 	@media (max-width: map-get($breakpoints-down, $size)) {
+// 		@content;
+// 	}
+// }
