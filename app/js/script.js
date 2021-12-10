@@ -5,8 +5,8 @@ const Project = (title) => {
   return { title, tasks };
 };
 
-const Task = (title, description, dueDate) => {
-  return { title, description, dueDate };
+const Task = (title, dueDate, priority) => {
+  return { title, dueDate, priority };
 };
 
 const Lists = (() => {
@@ -38,6 +38,8 @@ const Display = (() => {
 
       const project = Project(userInputProject.value);
       Lists.projectsList.push(project);
+
+      Data.updateProjectsLocalStorage();
 
       clearInterface();
       allProjectsInterface();
@@ -93,23 +95,38 @@ const Display = (() => {
       taskTitle.setAttribute("placeholder", "Title");
       taskTitle.required = true;
 
-      const taskDescription = document.createElement("input");
-      taskDescription.setAttribute("type", "text");
-      taskDescription.setAttribute("placeholder", "Description");
-      taskDescription.required = true;
-
       const taskDueDate = document.createElement("input");
       taskDueDate.setAttribute("type", "date");
       taskDueDate.setAttribute("placeholder", "Due Date");
       taskDueDate.required = true;
+
+      const taskPriority = document.createElement("select");
+      taskPriority.setAttribute("name", "priority");
+      taskPriority.required = true;
+      taskPriorityPlaceholder = document.createElement("option");
+      taskPriorityPlaceholder.textContent = "Priority";
+      taskPriorityPlaceholder.style.display = "none";
+      taskPriorityLow = document.createElement("option");
+      taskPriorityLow.setAttribute("value", "Low");
+      taskPriorityLow.textContent = "Low";
+      taskPriorityMedium = document.createElement("option");
+      taskPriorityMedium.setAttribute("value", "Medium");
+      taskPriorityMedium.textContent = "Medium";
+      taskPriorityHigh = document.createElement("option");
+      taskPriorityHigh.setAttribute("value", "High");
+      taskPriorityHigh.textContent = "High";
+      taskPriority.appendChild(taskPriorityPlaceholder);
+      taskPriority.appendChild(taskPriorityLow);
+      taskPriority.appendChild(taskPriorityMedium);
+      taskPriority.appendChild(taskPriorityHigh);
 
       const taskSubmitButton = document.createElement("button");
       taskSubmitButton.setAttribute("type", "submit");
       taskSubmitButton.textContent = "Submit";
 
       taskForm.appendChild(taskTitle);
-      taskForm.appendChild(taskDescription);
       taskForm.appendChild(taskDueDate);
+      taskForm.appendChild(taskPriority);
       taskForm.appendChild(taskSubmitButton);
 
       main.appendChild(taskForm);
@@ -117,49 +134,117 @@ const Display = (() => {
       taskSubmitButton.addEventListener("click", (e) => {
         e.preventDefault();
 
-        const task = Task(taskTitle.value, taskDescription.value, taskDueDate.value);
+        const task = Task(taskTitle.value, taskDueDate.value, taskPriority.value);
 
-        Lists.projectsList.forEach((element) => {
+        Lists.projectsList.map((element) => {
           if (element.title === projecTitle) {
             element.tasks.push(task);
 
             taskTitle.value = "";
-            taskDescription.value = "";
             taskDueDate.value = "";
+            taskPriority.value = "";
 
             taskForm.remove();
-
-            while (tasks.firstChild) {
-              tasks.removeChild(tasks.firstChild);
-            }
-
-            element.tasks.forEach((task) => {
-              const item = document.createElement("li");
-              item.textContent = task.title;
-
-              tasks.appendChild(item);
-            });
           }
         });
+        Data.updateProjectsLocalStorage();
+
+        const itemContainer = document.createElement("li");
+        itemContainer.style.display = "flex";
+        itemContainer.style.gap = "15px";
+        const itemTitle = document.createElement("p");
+        itemTitle.textContent = task.title;
+        const itemPriority = document.createElement("p");
+        itemPriority.textContent = task.priority;
+        const itemDueDate = document.createElement("p");
+        itemDueDate.textContent = task.dueDate;
+        const itemCheckbox = document.createElement("input");
+        itemCheckbox.setAttribute("type", "checkbox");
+        const itemDeleteButton = document.createElement("button");
+        itemDeleteButton.textContent = "Delete";
+        itemDeleteButton.addEventListener("click", (e) => {
+          element.tasks.map((task) => {
+            if (task.title === e.target.parentElement.firstChild.textContent) {
+              let index = element.tasks.indexOf(task);
+              element.tasks.splice(index, 1);
+              Data.updateProjectsLocalStorage();
+              e.target.parentElement.remove();
+            }
+          });
+        });
+
+        itemContainer.appendChild(itemTitle);
+        itemContainer.appendChild(itemPriority);
+        itemContainer.appendChild(itemDueDate);
+        itemContainer.appendChild(itemCheckbox);
+        itemContainer.appendChild(itemDeleteButton);
+        tasks.appendChild(itemContainer);
+      });
+    });
+
+    const deleteProjectButton = document.createElement("button");
+    deleteProjectButton.textContent = "Delete Project";
+    deleteProjectButton.addEventListener("click", () => {
+      Lists.projectsList.map((element) => {
+        if (element.title === projecTitle) {
+          let index = Lists.projectsList.indexOf(element);
+          Lists.projectsList.splice(index, 1);
+          Data.updateProjectsLocalStorage();
+          clearInterface();
+          if (Lists.projectsList.length <= 0) {
+            projectPromptInterface();
+          } else if (Lists.projectsList.length > 0) {
+            allProjectsInterface();
+          }
+        }
       });
     });
 
     const tasks = document.createElement("ul");
 
-    Lists.projectsList.forEach((element) => {
-      if (element.title === projecTitle) {
-        element.tasks.forEach((task) => {
-          const item = document.createElement("li");
-          item.textContent = task.title;
+    const updateTasksDisplay = (() => {
+      Lists.projectsList.forEach((element) => {
+        if (element.title === projecTitle) {
+          element.tasks.forEach((task) => {
+            const itemContainer = document.createElement("li");
+            itemContainer.style.display = "flex";
+            itemContainer.style.gap = "15px";
+            const itemTitle = document.createElement("p");
+            itemTitle.textContent = task.title;
+            const itemPriority = document.createElement("p");
+            itemPriority.textContent = task.priority;
+            const itemDueDate = document.createElement("p");
+            itemDueDate.textContent = task.dueDate;
+            const itemCheckbox = document.createElement("input");
+            itemCheckbox.setAttribute("type", "checkbox");
+            const itemDeleteButton = document.createElement("button");
+            itemDeleteButton.textContent = "Delete";
+            itemDeleteButton.addEventListener("click", (e) => {
+              element.tasks.map((task) => {
+                if (task.title === e.target.parentElement.firstChild.textContent) {
+                  let index = element.tasks.indexOf(task);
+                  element.tasks.splice(index, 1);
+                  Data.updateProjectsLocalStorage();
+                  e.target.parentElement.remove();
+                }
+              });
+            });
 
-          tasks.appendChild(item);
-        });
-      }
-    });
+            itemContainer.appendChild(itemTitle);
+            itemContainer.appendChild(itemPriority);
+            itemContainer.appendChild(itemDueDate);
+            itemContainer.appendChild(itemCheckbox);
+            itemContainer.appendChild(itemDeleteButton);
+            tasks.appendChild(itemContainer);
+          });
+        }
+      });
+    })();
 
     main.appendChild(interfaceHeading);
     main.appendChild(projectsButton);
     main.appendChild(newTaskButton);
+    main.appendChild(deleteProjectButton);
     main.appendChild(tasks);
   };
 
@@ -170,7 +255,14 @@ const Display = (() => {
   };
 
   const handlePageLoad = (() => {
-    window.addEventListener("load", () => {
+    window.addEventListener("load", (e) => {
+      let projects = JSON.parse(localStorage.getItem("Projects"));
+      let pageCookie = document.cookie;
+
+      if (projects) {
+        Lists.projectsList = projects;
+      }
+
       if (Lists.projectsList.length <= 0) {
         projectPromptInterface();
       } else if (Lists.projectsList.length > 0) {
@@ -178,4 +270,16 @@ const Display = (() => {
       }
     });
   })();
+})();
+
+const Data = (() => {
+  const updateProjectsLocalStorage = () => {
+    localStorage.setItem("Projects", JSON.stringify(Lists.projectsList));
+
+    let projects = JSON.parse(localStorage.getItem("Projects"));
+
+    Lists.projectsList = projects;
+  };
+
+  return { updateProjectsLocalStorage };
 })();
