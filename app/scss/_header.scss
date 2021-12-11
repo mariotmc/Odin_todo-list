@@ -1,0 +1,21 @@
+@use "functions" as *;
+@use "variables" as *;
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: rem(50) rem(20);
+  background-color: var(--primary-dark);
+  color: var(--primary-light);
+  font-family: var(--font-title);
+
+  .fa-check-circle {
+    font-size: rem(40);
+  }
+
+  h1 {
+    margin: auto rem(10) auto 0;
+    font-size: rem(40);
+  }
+}
