@@ -1,0 +1,64 @@
+@use "functions" as *;
+@use "variables" as *;
+
+.interface-container {
+  padding: rem(50) rem(20);
+  text-align: center;
+
+  h1 {
+    margin-bottom: rem(30);
+  }
+
+  button {
+    margin: 0 auto rem(75);
+    padding: rem(10);
+    font-size: rem(18);
+    font-family: inherit;
+    font-weight: 400;
+    border: none;
+    color: inherit;
+    background-color: inherit;
+
+    &:hover {
+      cursor: pointer;
+      background-color: var(--bg-hover);
+      border-radius: rem(5);
+    }
+  }
+
+  .fa-plus::before {
+    margin-right: rem(10);
+    font-family: "Font Awesome 5 Free";
+    font-size: rem(16);
+    font-weight: 700;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+    margin: 0;
+    padding: 0 15vw rem(30);
+
+    .fa-list::before {
+      margin-right: rem(10);
+      font-size: rem(18);
+      font-weight: 600;
+      font-family: "Font Awesome 5 Free";
+    }
+
+    .item {
+      padding: rem(20);
+      text-align: left;
+      font-size: rem(24);
+      font-weight: 400;
+      font-family: inherit;
+      border-radius: rem(5);
+
+      &:hover {
+        cursor: pointer;
+        background-color: var(--bg-hover);
+      }
+    }
+  }
+}
