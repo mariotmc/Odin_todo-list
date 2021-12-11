@@ -19,7 +19,10 @@ const Display = (() => {
   const main = document.querySelector("main");
 
   const projectPromptInterface = () => {
+    const projectFormContainer = document.createElement("div");
+    projectFormContainer.classList.add("modal");
     const projectForm = document.createElement("form");
+    projectForm.classList.add("modal-content");
     const projectFormLabel = document.createElement("label");
     projectFormLabel.textContent = "New Project";
     const projectFormInput = document.createElement("input");
@@ -28,8 +31,9 @@ const Display = (() => {
     projectFormInput.classList.add("project-name-input");
     projectForm.appendChild(projectFormLabel);
     projectForm.appendChild(projectFormInput);
+    projectFormContainer.appendChild(projectForm);
 
-    main.appendChild(projectForm);
+    main.appendChild(projectFormContainer);
 
     projectForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -39,7 +43,7 @@ const Display = (() => {
       const project = Project(userInputProject.value);
       Lists.projectsList.push(project);
 
-      Data.updateProjectsLocalStorage();
+      Data.updateLocalStorage();
 
       clearInterface();
       allProjectsInterface();
@@ -47,14 +51,21 @@ const Display = (() => {
   };
 
   const allProjectsInterface = () => {
+    const interfaceContainer = document.createElement("div");
+    interfaceContainer.classList.add("interface-container");
     const interfaceHeading = document.createElement("h1");
     interfaceHeading.textContent = "Projects";
     const newProjectButton = document.createElement("button");
-    newProjectButton.textContent = "New Project";
+    newProjectButton.classList.add("fas");
+    newProjectButton.classList.add("fa-plus");
+    newProjectButton.textContent = "Add Project";
     const projects = document.createElement("ul");
 
     Lists.projectsList.forEach((element) => {
       const item = document.createElement("li");
+      item.classList.add("item");
+      item.classList.add("fas");
+      item.classList.add("fa-list");
       item.textContent = element.title;
 
       item.addEventListener("click", (e) => {
@@ -69,17 +80,25 @@ const Display = (() => {
       projectPromptInterface();
     });
 
-    main.appendChild(interfaceHeading);
-    main.appendChild(newProjectButton);
-    main.appendChild(projects);
+    interfaceContainer.appendChild(interfaceHeading);
+    interfaceContainer.appendChild(newProjectButton);
+    interfaceContainer.appendChild(projects);
+    main.appendChild(interfaceContainer);
   };
 
   const currentProjectInterface = (projecTitle) => {
+    const interfaceContainer = document.createElement("div");
+    interfaceContainer.classList.add("interface-container");
+    interfaceContainer.classList.add("tasks-container");
+
     const interfaceHeading = document.createElement("h1");
     interfaceHeading.textContent = projecTitle;
 
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.classList.add("buttons-container");
+
     const projectsButton = document.createElement("button");
-    projectsButton.textContent = "Projects";
+    projectsButton.textContent = "All Projects";
     projectsButton.addEventListener("click", () => {
       clearInterface();
       allProjectsInterface();
@@ -88,7 +107,15 @@ const Display = (() => {
     const newTaskButton = document.createElement("button");
     newTaskButton.textContent = "New Task";
     newTaskButton.addEventListener("click", () => {
+      const taskFormContainer = document.createElement("div");
+      taskFormContainer.classList.add("modal");
+
+      const taskFormLabel = document.createElement("label");
+      taskFormLabel.textContent = "New Task";
+
       const taskForm = document.createElement("form");
+      taskForm.classList.add("task-form");
+      taskForm.classList.add("modal-content");
 
       const taskTitle = document.createElement("input");
       taskTitle.setAttribute("type", "text");
@@ -97,7 +124,6 @@ const Display = (() => {
 
       const taskDueDate = document.createElement("input");
       taskDueDate.setAttribute("type", "date");
-      taskDueDate.setAttribute("placeholder", "Due Date");
       taskDueDate.required = true;
 
       const taskPriority = document.createElement("select");
@@ -122,63 +148,73 @@ const Display = (() => {
 
       const taskSubmitButton = document.createElement("button");
       taskSubmitButton.setAttribute("type", "submit");
-      taskSubmitButton.textContent = "Submit";
+      taskSubmitButton.textContent = "ADD";
 
+      taskForm.appendChild(taskFormLabel);
       taskForm.appendChild(taskTitle);
       taskForm.appendChild(taskDueDate);
       taskForm.appendChild(taskPriority);
       taskForm.appendChild(taskSubmitButton);
+      taskFormContainer.appendChild(taskForm);
 
-      main.appendChild(taskForm);
+      main.appendChild(taskFormContainer);
 
       taskSubmitButton.addEventListener("click", (e) => {
         e.preventDefault();
 
-        const task = Task(taskTitle.value, taskDueDate.value, taskPriority.value);
+        if (taskTitle.value != "" && taskDueDate.value != "" && taskPriority.value != "") {
+          const task = Task(taskTitle.value, taskDueDate.value, taskPriority.value);
 
-        Lists.projectsList.map((element) => {
-          if (element.title === projecTitle) {
-            element.tasks.push(task);
+          Lists.projectsList.map((element) => {
+            if (element.title === projecTitle) {
+              element.tasks.push(task);
 
-            taskTitle.value = "";
-            taskDueDate.value = "";
-            taskPriority.value = "";
+              taskTitle.value = "";
+              taskDueDate.value = "";
+              taskPriority.value = "";
 
-            taskForm.remove();
-          }
-        });
-        Data.updateProjectsLocalStorage();
-
-        const itemContainer = document.createElement("li");
-        itemContainer.style.display = "flex";
-        itemContainer.style.gap = "15px";
-        const itemTitle = document.createElement("p");
-        itemTitle.textContent = task.title;
-        const itemPriority = document.createElement("p");
-        itemPriority.textContent = task.priority;
-        const itemDueDate = document.createElement("p");
-        itemDueDate.textContent = task.dueDate;
-        const itemCheckbox = document.createElement("input");
-        itemCheckbox.setAttribute("type", "checkbox");
-        const itemDeleteButton = document.createElement("button");
-        itemDeleteButton.textContent = "Delete";
-        itemDeleteButton.addEventListener("click", (e) => {
-          element.tasks.map((task) => {
-            if (task.title === e.target.parentElement.firstChild.textContent) {
-              let index = element.tasks.indexOf(task);
-              element.tasks.splice(index, 1);
-              Data.updateProjectsLocalStorage();
-              e.target.parentElement.remove();
+              taskForm.remove();
             }
           });
-        });
+          Data.updateLocalStorage();
 
-        itemContainer.appendChild(itemTitle);
-        itemContainer.appendChild(itemPriority);
-        itemContainer.appendChild(itemDueDate);
-        itemContainer.appendChild(itemCheckbox);
-        itemContainer.appendChild(itemDeleteButton);
-        tasks.appendChild(itemContainer);
+          const itemContainer = document.createElement("li");
+          itemContainer.classList.add("item");
+          itemContainer.setAttribute("id", "task-item");
+          itemContainer.style.display = "flex";
+          itemContainer.style.gap = "15px";
+          const itemTitle = document.createElement("p");
+          itemTitle.textContent = task.title;
+          const itemPriority = document.createElement("p");
+          itemPriority.textContent = task.priority;
+          const itemDueDate = document.createElement("p");
+          itemDueDate.textContent = task.dueDate;
+          const itemCheckbox = document.createElement("input");
+          itemCheckbox.setAttribute("type", "checkbox");
+          const itemDeleteButton = document.createElement("button");
+          itemDeleteButton.classList.add("fas");
+          itemDeleteButton.classList.add("fa-times");
+          itemDeleteButton.addEventListener("click", (e) => {
+            element.tasks.map((task) => {
+              if (task.title === e.target.parentElement.firstChild.textContent) {
+                let index = element.tasks.indexOf(task);
+                element.tasks.splice(index, 1);
+                Data.updateLocalStorage();
+                e.target.parentElement.remove();
+              }
+            });
+          });
+
+          itemContainer.appendChild(itemTitle);
+          itemContainer.appendChild(itemPriority);
+          itemContainer.appendChild(itemDueDate);
+          itemContainer.appendChild(itemCheckbox);
+          itemContainer.appendChild(itemDeleteButton);
+          tasks.appendChild(itemContainer);
+
+          const modal = document.querySelector(".modal");
+          modal.remove();
+        }
       });
     });
 
@@ -189,7 +225,7 @@ const Display = (() => {
         if (element.title === projecTitle) {
           let index = Lists.projectsList.indexOf(element);
           Lists.projectsList.splice(index, 1);
-          Data.updateProjectsLocalStorage();
+          Data.updateLocalStorage();
           clearInterface();
           if (Lists.projectsList.length <= 0) {
             projectPromptInterface();
@@ -201,12 +237,15 @@ const Display = (() => {
     });
 
     const tasks = document.createElement("ul");
+    tasks.classList.add("task-ul");
 
     const updateTasksDisplay = (() => {
       Lists.projectsList.forEach((element) => {
         if (element.title === projecTitle) {
           element.tasks.forEach((task) => {
             const itemContainer = document.createElement("li");
+            itemContainer.classList.add("item");
+            itemContainer.setAttribute("id", "task-item");
             itemContainer.style.display = "flex";
             itemContainer.style.gap = "15px";
             const itemTitle = document.createElement("p");
@@ -218,13 +257,14 @@ const Display = (() => {
             const itemCheckbox = document.createElement("input");
             itemCheckbox.setAttribute("type", "checkbox");
             const itemDeleteButton = document.createElement("button");
-            itemDeleteButton.textContent = "Delete";
+            itemDeleteButton.classList.add("fas");
+            itemDeleteButton.classList.add("fa-times");
             itemDeleteButton.addEventListener("click", (e) => {
               element.tasks.map((task) => {
                 if (task.title === e.target.parentElement.firstChild.textContent) {
                   let index = element.tasks.indexOf(task);
                   element.tasks.splice(index, 1);
-                  Data.updateProjectsLocalStorage();
+                  Data.updateLocalStorage();
                   e.target.parentElement.remove();
                 }
               });
@@ -241,17 +281,29 @@ const Display = (() => {
       });
     })();
 
-    main.appendChild(interfaceHeading);
-    main.appendChild(projectsButton);
-    main.appendChild(newTaskButton);
-    main.appendChild(deleteProjectButton);
-    main.appendChild(tasks);
+    buttonsContainer.appendChild(projectsButton);
+    buttonsContainer.appendChild(newTaskButton);
+    buttonsContainer.appendChild(deleteProjectButton);
+
+    interfaceContainer.appendChild(interfaceHeading);
+    interfaceContainer.appendChild(buttonsContainer);
+    interfaceContainer.appendChild(tasks);
+    main.appendChild(interfaceContainer);
   };
 
   const clearInterface = () => {
     while (main.firstChild) {
       main.removeChild(main.firstChild);
     }
+    const header = document.createElement("header");
+    const pageTitle = document.createElement("h1");
+    pageTitle.textContent = "Todo List";
+    const icon = document.createElement("i");
+    icon.classList.add("fas");
+    icon.classList.add("fa-check-circle");
+    header.appendChild(pageTitle);
+    header.appendChild(icon);
+    main.appendChild(header);
   };
 
   const handlePageLoad = (() => {
@@ -273,7 +325,7 @@ const Display = (() => {
 })();
 
 const Data = (() => {
-  const updateProjectsLocalStorage = () => {
+  const updateLocalStorage = () => {
     localStorage.setItem("Projects", JSON.stringify(Lists.projectsList));
 
     let projects = JSON.parse(localStorage.getItem("Projects"));
@@ -281,5 +333,5 @@ const Data = (() => {
     Lists.projectsList = projects;
   };
 
-  return { updateProjectsLocalStorage };
+  return { updateLocalStorage };
 })();
