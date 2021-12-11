@@ -1,11 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Yusei+Magic&display=swap");
+
 // FONTS
 :root {
-	--font-body: Arial, sans-serif;
+  --font-title: "Yusei Magic", sans-serif;
+  --font-body: "Roboto", sans-serif;
 }
-
 
 //COLOURS
 :root {
-	--white: hsl(0, 0%, 100%);
-	--black: hsl(0, 0%, 0%);
+  --primary-dark: #333;
+  --secondary-dark: #444;
+  --primary-light: #eee;
+  --secondary-light: #ddd;
+  --bg-hover: #ccc;
 }
