@@ -133,13 +133,13 @@ const Display = (() => {
       taskPriorityPlaceholder.textContent = "Priority";
       taskPriorityPlaceholder.style.display = "none";
       taskPriorityLow = document.createElement("option");
-      taskPriorityLow.setAttribute("value", "Low");
+      taskPriorityLow.setAttribute("value", "!");
       taskPriorityLow.textContent = "Low";
       taskPriorityMedium = document.createElement("option");
-      taskPriorityMedium.setAttribute("value", "Medium");
+      taskPriorityMedium.setAttribute("value", "!!");
       taskPriorityMedium.textContent = "Medium";
       taskPriorityHigh = document.createElement("option");
-      taskPriorityHigh.setAttribute("value", "High");
+      taskPriorityHigh.setAttribute("value", "!!!");
       taskPriorityHigh.textContent = "High";
       taskPriority.appendChild(taskPriorityPlaceholder);
       taskPriority.appendChild(taskPriorityLow);
@@ -182,15 +182,15 @@ const Display = (() => {
           itemContainer.classList.add("item");
           itemContainer.setAttribute("id", "task-item");
           itemContainer.style.display = "flex";
-          itemContainer.style.gap = "15px";
           const itemTitle = document.createElement("p");
           itemTitle.textContent = task.title;
+          itemTitle.classList.add("item-title");
           const itemPriority = document.createElement("p");
           itemPriority.textContent = task.priority;
+          itemPriority.classList.add("item-priority");
           const itemDueDate = document.createElement("p");
           itemDueDate.textContent = task.dueDate;
-          const itemCheckbox = document.createElement("input");
-          itemCheckbox.setAttribute("type", "checkbox");
+          itemDueDate.classList.add("item-due-date");
           const itemDeleteButton = document.createElement("button");
           itemDeleteButton.classList.add("fas");
           itemDeleteButton.classList.add("fa-times");
@@ -208,7 +208,6 @@ const Display = (() => {
           itemContainer.appendChild(itemTitle);
           itemContainer.appendChild(itemPriority);
           itemContainer.appendChild(itemDueDate);
-          itemContainer.appendChild(itemCheckbox);
           itemContainer.appendChild(itemDeleteButton);
           tasks.appendChild(itemContainer);
 
@@ -236,6 +235,58 @@ const Display = (() => {
       });
     });
 
+    const legend = document.createElement("div");
+    legend.classList.add("legend");
+    legend.style.display = "flex";
+    legend.style.gap = "50px";
+    legend.style.justifyContent = "center";
+
+    const legendLow = document.createElement("div");
+    legendLow.classList.add("legend-item");
+    legendLow.style.display = "flex";
+    legendLow.style.gap = "5px";
+    const legendLowText = document.createElement("p");
+    legendLowText.textContent = "Low";
+    legendLowText.style.color = "#333333";
+    const legendLowSymbol = document.createElement("p");
+    legendLowSymbol.textContent = "!";
+    legendLowSymbol.classList.add("legend-symbol");
+    legendLowSymbol.style.color = "#e63946";
+    legendLow.appendChild(legendLowText);
+    legendLow.appendChild(legendLowSymbol);
+
+    const legendMedium = document.createElement("div");
+    legendMedium.classList.add("legend-item");
+    legendMedium.style.display = "flex";
+    legendMedium.style.gap = "5px";
+    const legendMediumText = document.createElement("p");
+    legendMediumText.textContent = "Medium";
+    legendMediumText.style.color = "#333333";
+    const legendMediumSymbol = document.createElement("p");
+    legendMediumSymbol.textContent = "!!";
+    legendMediumSymbol.classList.add("legend-symbol");
+    legendMediumSymbol.style.color = "#e63946";
+    legendMedium.appendChild(legendMediumText);
+    legendMedium.appendChild(legendMediumSymbol);
+
+    const legendHigh = document.createElement("div");
+    legendHigh.classList.add("legend-item");
+    legendHigh.style.display = "flex";
+    legendHigh.style.gap = "5px";
+    const legendHighText = document.createElement("p");
+    legendHighText.textContent = "High";
+    legendHighText.style.color = "#333333";
+    const legendHighSymbol = document.createElement("p");
+    legendHighSymbol.textContent = "!!!";
+    legendHighSymbol.classList.add("legend-symbol");
+    legendHighSymbol.style.color = "#e63946";
+    legendHigh.appendChild(legendHighText);
+    legendHigh.appendChild(legendHighSymbol);
+
+    legend.appendChild(legendLow);
+    legend.appendChild(legendMedium);
+    legend.appendChild(legendHigh);
+
     const tasks = document.createElement("ul");
     tasks.classList.add("task-ul");
 
@@ -247,15 +298,15 @@ const Display = (() => {
             itemContainer.classList.add("item");
             itemContainer.setAttribute("id", "task-item");
             itemContainer.style.display = "flex";
-            itemContainer.style.gap = "15px";
             const itemTitle = document.createElement("p");
             itemTitle.textContent = task.title;
+            itemTitle.classList.add("item-title");
             const itemPriority = document.createElement("p");
             itemPriority.textContent = task.priority;
+            itemPriority.classList.add("item-priority");
             const itemDueDate = document.createElement("p");
             itemDueDate.textContent = task.dueDate;
-            const itemCheckbox = document.createElement("input");
-            itemCheckbox.setAttribute("type", "checkbox");
+            itemDueDate.classList.add("item-due-date");
             const itemDeleteButton = document.createElement("button");
             itemDeleteButton.classList.add("fas");
             itemDeleteButton.classList.add("fa-times");
@@ -273,7 +324,6 @@ const Display = (() => {
             itemContainer.appendChild(itemTitle);
             itemContainer.appendChild(itemPriority);
             itemContainer.appendChild(itemDueDate);
-            itemContainer.appendChild(itemCheckbox);
             itemContainer.appendChild(itemDeleteButton);
             tasks.appendChild(itemContainer);
           });
@@ -287,6 +337,7 @@ const Display = (() => {
 
     interfaceContainer.appendChild(interfaceHeading);
     interfaceContainer.appendChild(buttonsContainer);
+    interfaceContainer.appendChild(legend);
     interfaceContainer.appendChild(tasks);
     main.appendChild(interfaceContainer);
   };
@@ -319,6 +370,16 @@ const Display = (() => {
         projectPromptInterface();
       } else if (Lists.projectsList.length > 0) {
         allProjectsInterface();
+      }
+    });
+  })();
+
+  const formCancelClick = (() => {
+    const modal = document.getElementsByClassName("modal");
+
+    document.addEventListener("mouseup", (e) => {
+      if (e.target === modal[0]) {
+        modal[0].remove();
       }
     });
   })();
