@@ -42,13 +42,24 @@
 
 .buttons-container {
   display: flex;
-  //   gap: rem(70);
-  margin: 0 auto rem(30);
+  margin: 0 auto rem(20);
   justify-content: center;
 
   button {
     margin: 0;
     padding: rem(10) rem(60);
+  }
+}
+
+.legend {
+  margin-bottom: rem(20);
+
+  p {
+    font-size: rem(18);
+  }
+
+  .legend-symbol {
+    font-weight: 700;
   }
 }
 
@@ -60,9 +71,14 @@
   #task-item {
     padding: 0 5vw;
 
+    .item-title {
+      margin-right: auto;
+    }
+
     button {
       margin: 0;
       padding: 0;
+      visibility: hidden;
     }
 
     input {
@@ -71,6 +87,8 @@
       height: rem(30);
       width: rem(30);
       border: rem(2) solid var(--primary-dark);
+      padding: rem(4);
+      background: content-box;
       border-radius: 50%;
     }
 
@@ -79,6 +97,21 @@
       font-family: "Font Awesome 5 Free";
       font-size: rem(35);
       font-weight: 700;
+    }
+
+    .item-priority {
+      margin-right: rem(30);
+      color: #e63946;
+    }
+
+    .item-due-date {
+      margin-right: rem(30);
+    }
+
+    &:hover {
+      button {
+        visibility: visible;
+      }
     }
   }
 }

@@ -61,6 +61,15 @@ header h1 {
   font-size: 2.5rem;
 }
 
+footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3.125rem;
+  background-color: var(--primary-dark);
+}
+
 .modal {
   position: fixed;
   z-index: 1;
@@ -108,7 +117,7 @@ header h1 {
   margin-bottom: 1.875rem;
 }
 .interface-container button {
-  margin: 0 auto 4.6875rem;
+  margin: 0 auto 3.125rem;
   padding: 0.625rem;
   font-size: 1.125rem;
   font-family: inherit;
@@ -189,12 +198,22 @@ header h1 {
 
 .buttons-container {
   display: flex;
-  margin: 0 auto 1.875rem;
+  margin: 0 auto 1.25rem;
   justify-content: center;
 }
 .buttons-container button {
   margin: 0;
   padding: 0.625rem 3.75rem;
+}
+
+.legend {
+  margin-bottom: 1.25rem;
+}
+.legend p {
+  font-size: 1.125rem;
+}
+.legend .legend-symbol {
+  font-weight: 700;
 }
 
 .tasks-container .task-ul {
@@ -203,9 +222,13 @@ header h1 {
 .tasks-container #task-item {
   padding: 0 5vw;
 }
+.tasks-container #task-item .item-title {
+  margin-right: auto;
+}
 .tasks-container #task-item button {
   margin: 0;
   padding: 0;
+  visibility: hidden;
 }
 .tasks-container #task-item input {
   -webkit-appearance: none;
@@ -213,6 +236,8 @@ header h1 {
   height: 1.875rem;
   width: 1.875rem;
   border: 0.125rem solid var(--primary-dark);
+  padding: 0.25rem;
+  background: content-box;
   border-radius: 50%;
 }
 .tasks-container #task-item .fa-times::before {
@@ -220,4 +245,14 @@ header h1 {
   font-family: "Font Awesome 5 Free";
   font-size: 2.1875rem;
   font-weight: 700;
+}
+.tasks-container #task-item .item-priority {
+  margin-right: 1.875rem;
+  color: #e63946;
+}
+.tasks-container #task-item .item-due-date {
+  margin-right: 1.875rem;
+}
+.tasks-container #task-item:hover button {
+  visibility: visible;
 }/*# sourceMappingURL=style.css.map */
